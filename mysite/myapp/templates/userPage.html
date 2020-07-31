@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+@include foundation-everything
+
+{% block topBar %}
+<style>
+body{
+  background:powderblue;
+}
+#postItem{
+  word-break: break-word;
+  margin:0 0 10px 0;
+  background-color: white;
+  list-style-type: none;
+  border: 1px solid black;
+  border-spacing: 100px
+  }
+#buttonItem{
+  list-style-type:none;
+}
+</style>
+<body>
+  <div class=" columns small-12 medium-3">
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li>
+            <a href="/home">Networx</a>
+          </li>
+          <li>
+            <h4>{{user.username}}</h4>
+          </li>
+        </ul>
+      </div>
+      <div class="top-bar-right">
+        <ul class="button-group even-2">
+          <li id="buttonItem">
+            <a href="/login" class="button">Logout</a>
+          </li>
+          <li id="buttonItem">
+            <a href="/explore" class="button">Explore</a>
+          </li>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body %}
+<div class="grid-x">
+  <div class="cell small-6">{{guestUser.username}}</div>
+  {% if guestUser in friends %}
+  <div class="row">
+  <a href="/{{guestUser.id}}/remove">
+  <button type="button" class="alert button small">Remove Friend</button>
+  </a>
+</div>
+  {% else %}
+  <div class="row">
+  <a href="/{{guestUser.id}}/add">
+  <button type="button" class="success button small">Add Friend</button>
+  </a>
+</div>
+  {% endif %}
+</div>
+  {% for post in userPosts reversed %}
+    <ul>
+      {% if post.user in guestFriends %}
+      <li id="postItem">
+        <div class="row">
+          <a href="/{{post.user.id}}/">{{post.user}}</a>:
+        </div>
+          {{post}}
+          {% if post.image %}
+           <a href="{{post.image.url}}">
+           <img src="{{post.image.url}}" width="240">
+           </a>
+           {% endif %}
+        <div class="row">
+          {{post.timeCreated}}
+        </div>
+      </li>
+    </ul>
+      {% elif post.user == guestUser %}
+      <li id="postItem">
+        <div class="row">
+          <a href="/{{post.user.id}}/">{{post.user}}</a>:
+        </div>
+          {{post}}
+          {% if post.image %}
+           <a href="{{post.image.url}}">
+           <img src="{{post.image.url}}" width="240">
+           </a>
+           {% endif %}
+        <div class="row">
+          {{post.timeCreated}}
+        </div>
+      </li>
+      {% else %}
+      {% endif %}
+    </ul>
+  {% endfor %}
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static "js/vendor.js" %}"></script>
+<script src="{% static "js/foundation.js" %}"></script>
+<script src="{% static "js/myvue.js" %}"></script>
+{% endblock %}

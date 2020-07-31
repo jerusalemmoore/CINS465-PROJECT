@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block topBar %}
+<body>
+   <div id="title" class="columns small-12 medium-3">
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li>
+          <a href="/login">Networx</a>
+        </li>
+        </ul>
+      </div>
+      <div class="top-bar-right">
+        <a href="/login" class="button">Login</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block body %}
+<h1>Signup</h1>
+<form method="post">
+  {% csrf_token %}
+  {{form.as_p}}
+  <input type="submit" value="Sign up">
+</form>
+{% endblock %}

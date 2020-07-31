@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    body{
+      background:powderblue;
+    }
+    #postItem{
+      word-break: break-word;
+      margin:0 0 10px 0;
+      background-color: white;
+      list-style-type: none;
+      border: 1px solid black;
+      border-spacing: 100px
+      }
+    #buttonItem{
+      list-style-type:none;
+    }
+    </style>
+    <meta charset ="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title>Networx</title>
+        <link rel="stylesheet" href="{% static "css/foundation.css" %}"/>
+  </head>
+  <body>
+    {% block topBar %}
+    {% endblock %}
+    <!-- Calling a block template -->
+    {% block body %}
+    {% endblock %}
+    {% block scripts %}
+    {% endblock %}
+  </body>
+</html>

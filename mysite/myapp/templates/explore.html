@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+{% block topBar %}
+<style>
+  #postItem{
+    word-break: break-word;
+    margin:0 0 10px 0;
+    background-color: white;
+    list-style-type: none;
+      border: 1px solid black;
+      border-spacing: 100px
+    }
+  #buttonItem{
+    list-style-type:none;
+    border-spacing: 100px
+  }
+</style>
+  <div class=" columns small-12 medium-3">
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li>
+            <a href="/home">Networx</a>
+          </li>
+          <li>
+            <h4>{{explorePage}}</h4>
+          </li>
+        </ul>
+      </div>
+      <div class="top-bar-right">
+        <ul class="button-group radius">
+          <li id="buttonItem">
+            <a href="/login" class="button">Logout</a>
+          </li>
+          <li id="buttonItem">
+            <a href="/explore" class="button">Explore</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
+  {% block body %}
+  <body>
+  <div class=columns small--12 medium-3>
+  {% for post in globalPosts reversed %}
+      <ul>
+        <li id="postItem">
+        <div class="row">
+          <a href="/{{post.user.id}}/">{{post.user}}</a>:
+        </div>
+        {{post}}
+        {% if post.image %}
+         <a href="{{post.image.url}}">
+         <img src="{{post.image.url}}" width="240">
+         </a>
+         {% endif %}
+        <div class="row">
+          <div class="row">
+            {{post.timeCreated}}
+          </div>
+          </div>
+        </li>
+      </ul>
+  {% endfor %}
+  </div>
+  </body>
+{% endblock %}

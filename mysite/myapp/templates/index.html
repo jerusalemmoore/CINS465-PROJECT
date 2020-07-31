@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+@include foundation-everything
+<!DOCTYPE html>
+{% block topBar %}
+
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <ul class="dropdown menu" data-dropdown-menu>
+          <li class="menu-text">
+            <h2><a href="/home">Networx</a></h2>
+          </li>
+        </ul>
+      </div>
+      <div class="top-bar-right">
+        <ul class="button-group even-2">
+          <li id="buttonItem">
+            <a href="/login" class="button">Logout</a>
+          </li>
+          <li id="buttonItem">
+            <a href="/explore" class="button">Explore</a>
+          </li>
+      </div>
+    </div>
+{% endblock %}
+{% block body %}
+
+<div class="grid-x">
+  <div class="cell small-6">{{user.username}}</div>
+</div>
+<div class="grid-x">
+  <div class="cell">
+    <form enctype="multipart/form-data" action="/home/" method="post">
+      {% csrf_token %}
+      {{userInfoForm.as_p}}
+      <input class="button" type="submit" value="Post"/>
+    </form>
+  </div>
+</div>
+<div class="grid-container fluid">
+  <div class="grid-x grid-margin-x">
+    <div class="cell small-2">cell</div>
+    <div class="cell small-8">
+    {% for post in userPosts reversed %}
+    <ul>
+      {% if post.user == user %}
+      <li id="postItem">
+        <div class="row">
+          {{post.user}}:
+        </div>
+        {{post}}
+        {% if post.image %}
+         <a href="{{post.image.url}}">
+         <img src="{{post.image.url}}" width="240">
+         </a>
+         {% endif %}
+         <div class="grid-x grid-margin-x">
+           <div class="cell small-2">
+             <form action="/delete/{{post.id}}/" method="post">
+               {% csrf_token %}
+               <input type = "submit" value="Delete">
+              </form>
+            </div>
+          </div>
+        <div class="row">
+            {{post.timeCreated}}
+          </div>
+      </li>
+      {% elif post.user in friends %}
+      <li id="postItem">
+        <div class="row">
+          <a href=/{{post.user.id}}/>{{post.user}}</a>:
+        </div>
+        {{post}}
+        {% if post.image %}
+         <a href="{{post.image.url}}">
+         <img src="{{post.image.url}}" width="240">
+         </a>
+         {% endif %}
+        <div class="row">
+            {{post.timeCreated}}
+          </div>
+      </li>
+      {% endif %}
+    </ul>
+
+    {% endfor %}
+  </div>
+    <div class="cell small-2">
+      <h3> Friends </h3>
+      {% for friend in friends %}
+      <ul>
+        <li id="postItem">
+          <div class="row">
+          <a href=/{{friend.id}}/>{{ friend.username}}</a>
+          </div>
+          <div class="row">
+          <a href="/connect/remove/{{friend.id}}">
+          <button type="button" class="alert button small">Remove Friend</button>
+          </a>
+          </div>
+        </li>
+      </ul>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="{% static "js/vendor.js" %}"></script>
+<script src="{% static "js/foundation.js" %}"></script>
+<script src="{% static "js/myvue.js" %}"></script>
+{% endblock %}
