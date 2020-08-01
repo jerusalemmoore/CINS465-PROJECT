@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block topBar %}
+<div class="top-bar">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+      <li class="menu-text">
+        <h2><a href="/home">Networx</a></h2>
+      </li>
+    </ul>
+  </div>
+  <div class="top-bar-right">
+    <ul class="button-group even-4">
+      <li id="buttonItem">
+        <a href="/logout" class="button">Logout</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/explore" class="button">Explore</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/chat" class="button">NetChat</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/settings" class="button">Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+{% block body %}
+{% for message in messages %}
+  <div class="alert alert-success">
+    <a class="close" href="#" data-dismiss="alert">x</a>
+    {{message}}
+  </div>
+{% endfor %}
+<div class="container">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button class="button" type="submit">Submit</button>
+  </form>
+</div>
+{% endblock %}

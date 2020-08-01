@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import  UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
+from django.contrib.auth.forms import  UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -78,23 +79,27 @@ def changeFriends(request,operation,id):
 
 def loginView(request):
     if request.method == 'POST':
-        # form = AuthenticationForm()
+        form = AuthenticationForm(request.POST)
         username=request.POST['username']
         password=request.POST['password']
-        user= authenticate(username=username,password=password)
+        user = authenticate(username=username,password=password)
         # form = AuthenticationForm(request.POST)
         if user is not None:
-            login(request, user)
-            return redirect('/home/')
+            if user.is_active:
+                login(request, user)
+                return redirect('/home/')
+        else:
+            messages.error(request, 'Invalid username/password, click the Sign Up button to create an account')
+            return redirect('/login/')
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form':form})
 
 #LOGOUT PAGE
 def logoutView(request):
-    if request.method == 'POST':
-        logout(request)
-    return redirect("/logout/")
+    logout(request)
+    return redirect('/login/')
+
 #SIGNUP PAGE
 def signupView(request):
     # include a login form
@@ -123,7 +128,7 @@ def userView(request, id):
     guestUser = models.User.objects.filter(id=id)[0]
     friend, created = models.Friend.objects.get_or_create(currentUser=request.user)
     friends = friend.users.all()
-    guestFriend = models.Friend.objects.get(currentUser=id)
+    guestFriend, created = models.Friend.objects.get_or_create(currentUser=guestUser)
     guestFriends = guestFriend.users.all()
     context = {
     "userPosts":li,
@@ -148,16 +153,23 @@ def getUsers(request):
         tempUser["email"] = user.email
         userList["users"].append(tempUser)
     return JsonResponse(userList)
-
-def chat_room(request, label):
-    room, created = Room.objects.get_or_create(label=label)
-
-    messages = reversed(room.messages.order_by('-timestamp')[:50])
+def friendsView(request):
+    friend, created = models.Friend.objects.get_or_create(currentUser=request.user)
+    friends = friend.users.all()
     context = {
-    'room': room,
-    'messages': messages,
+    "friends":friends
     }
-    return render(request, "chat.html", context=context)
+    return render(request, 'friends.html', context=context)
+
+def guestFriendsView(request, id):
+    guestUser = models.User.objects.get(id=id)
+    friend, created = models.Friend.objects.get_or_create(currentUser=guestUser)
+    friends = friend.users.all()
+    context = {
+    "friends":friends,
+    "guestUser":guestUser,
+    }
+    return render(request,'guestFriends.html',context=context)
 
 def chat(request):
     return render(request, 'chat.html')
@@ -167,3 +179,33 @@ def room(request, room_name):
         'room_name':room_name,
     }
     return render(request, 'room.html', context=context)
+def settingsView(request):
+    if request.method =='POST':
+        form = forms.EditAccountForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('/home/')
+        else:
+            messages.error(request, 'User already exists')
+            return redirect('/settings/')
+    else:
+        form = forms.EditAccountForm(instance=request.user)
+        context = {
+        "form":form
+        }
+        return render(request, 'settings.html', context=context)
+def changePassword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('/login/')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'changePassword.html', {
+        'form': form
+    })

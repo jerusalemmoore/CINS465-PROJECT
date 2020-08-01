@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block topBar %}
+<div class="top-bar">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+      <li class="menu-text">
+        <h2><a href="/home">Networx</a></h2>
+      </li>
+    </ul>
+  </div>
+  <div class="top-bar-right">
+    <ul class="button-group even-3">
+      <li id="buttonItem">
+        <a href="/logout" class="button">Logout</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/explore" class="button">Explore</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/chat" class="button">NetChat</a>
+      </li>
+  </div>
+</div>
+{% endblock %}
+{% block body %}
+
+{% for friend in friends %}
+<ul>
+  {% if friend == user %}
+  <li id="postItem">
+  <div class="row">
+  <a href="/{{friend.id}}/">{{ friend.username}}
+  </a>
+  </div>
+  </li>
+  {% else %}
+  <li id="postItem">
+    <div class="row">
+    <a href="/{{friend.id}}/">{{ friend.username}}
+    </a>
+    </div>
+    <div class="row">
+    <a href="/connect/remove/{{friend.id}}">
+    <button type="button" class="alert button small">Unfollow</button>
+    </a>
+    </div>
+  </li>
+  {% endif %}
+</ul>
+{% empty %}
+  {{guestUser.username}} currently isn't following anyone
+{% endfor %}
+
+
+
+{% endblock %}

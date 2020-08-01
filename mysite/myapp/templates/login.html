@@ -18,6 +18,12 @@
 {% endblock %}
 {% block body %}
 <h1>Log In</h1>
+{% for message in messages %}
+  <div class="alert alert-success">
+    <a class="close" href="#" data-dismiss="alert">x</a>
+    {{message}}
+  </div>
+{% endfor %}
 <form method ="POST">
   {% csrf_token %}
   {{form}}

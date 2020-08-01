@@ -1,6 +1,7 @@
 #Login form is a reference to a youtube django tutorial
 #at url https://www.youtube.com/watch?v=drMr9B3ZcPI
 from django import forms
+from django.contrib.auth.forms import UserChangeForm
 from . import models
 class UserInfoForm(forms.Form):
     username = forms.CharField(
@@ -41,7 +42,13 @@ class PostForm(forms.Form):
         postInstance.save()
 
     # country = forms.CharField(widget=forms.HiddenInput())
-
+class EditAccountForm(UserChangeForm):
+    class Meta:
+        model = models.User
+        fields = {
+        'username',
+        'password',
+        }
 
 class DeleteUserForm(forms.Form):
     username = forms.CharField(

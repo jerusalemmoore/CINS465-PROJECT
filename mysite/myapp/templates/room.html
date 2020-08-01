@@ -1,12 +1,48 @@
 <!-- chat/templates/chat/room.html -->
+{% extends "base.html" %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8"/>
-    <title>Chat Room</title>
+    <title>Room</title>
 </head>
-<body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+
+{% block topBar %}
+<div class="top-bar">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+      <li class="menu-text">
+        <h2><a href="/chat">NetChat</a></h2>
+      </li>
+      <li class="menu-text">
+          <h4>{{user.username}}<h4>
+      </li>
+    </ul>
+  </div>
+  <div class="top-bar-center">
+    <h2>  Chat Room: {{room_name}} </h2>
+  </div>
+  <div class="top-bar-right">
+    <ul class="button-group even-4">
+      <li id="buttonItem">
+        <a href="/login" class="button">Logout</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/home" class="button">Home</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/explore" class="button">Explore</a>
+      </li>
+      <li id="buttonItem">
+        <a href="/settings" class="button">Settings</a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}
+{% block body %}
+  <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     {{ room_name|json_script:"room-name" }}
@@ -46,5 +82,5 @@
             messageInputDom.value = '';
         };
     </script>
-</body>
+{% endblock %}
 </html>

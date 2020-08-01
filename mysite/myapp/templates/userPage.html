@@ -34,12 +34,18 @@ body{
         </ul>
       </div>
       <div class="top-bar-right">
-        <ul class="button-group even-2">
+        <ul class="button-group even-4">
           <li id="buttonItem">
             <a href="/login" class="button">Logout</a>
           </li>
           <li id="buttonItem">
             <a href="/explore" class="button">Explore</a>
+          </li>
+          <li id="buttonItem">
+            <a href="/chat" class="button">NetChat</a>
+          </li>
+          <li id="buttonItem">
+            <a href="/settings" class="button">Settings</a>
           </li>
       </div>
     </div>
@@ -52,17 +58,53 @@ body{
   {% if guestUser in friends %}
   <div class="row">
   <a href="/{{guestUser.id}}/remove">
-  <button type="button" class="alert button small">Remove Friend</button>
+  <button type="button" class="alert button small">Unfollow</button>
   </a>
 </div>
   {% else %}
   <div class="row">
   <a href="/{{guestUser.id}}/add">
-  <button type="button" class="success button small">Add Friend</button>
+  <button type="button" class="success button small">Follow</button>
   </a>
 </div>
   {% endif %}
 </div>
+<div class="grid-container fluid">
+  <div class="grid-x grid-margin-x">
+    <div class="cell small-2 ">
+      <a href="/friends/{{guestUser.id}}">
+      <h3> Friends </h3>
+      </a>
+      {% for friend in guestFriends %}
+      <ul>
+        {% if friend == user %}
+        <li id="postItem">
+          <div class="row">
+          <a href="/{{friend.id}}/">{{ friend.username}}</a>
+          </div>
+        </li>
+        {% else %}
+        <li id="postItem">
+          <div class="row">
+          <a href="/{{friend.id}}/">{{ friend.username}}</a>
+          </div>
+          <div class="row">
+          {% if friend in friends %}
+          <a href="/connect/remove/{{friend.id}}">
+          <button type="button" class="alert button small">Unfollow</button>
+          </a>
+          {% else %}
+          <a href="/connect/remove/{{friend.id}}">
+          <button type="button" class="success button small">Follow</button>
+          </a>
+          {% endif %}
+          </div>
+        </li>
+        {% endif %}
+      </ul>
+      {% endfor %}
+    </div>
+  <div class="cell small-8">
   {% for post in userPosts reversed %}
     <ul>
       {% if post.user in guestFriends %}
@@ -100,6 +142,9 @@ body{
       {% endif %}
     </ul>
   {% endfor %}
+</div>
+</div>
+</div>
 {% endblock %}
 
 {% block scripts %}
