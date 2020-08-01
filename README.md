@@ -1,8 +1,5 @@
-I've been working on the project with docker for a majority of the time so I was using docker-compose up to run 
-and develop the website. For some reason though due to something I'm not understanding using docker-compose up
-doesn't allow django channels to work correctly(I'm assuming it's an ip issue with the docker container). I'm not 
-sure if you were already going to use python3 manage.py runserver to test the project but if you are that should 
-allow the real time chat to work.
+I've been working on the project with docker for a majority of the time so I was using docker-compose
+build and docker-compose up to run and develop the website. For some reason though due to something I'm not understanding using docker-compose updoesn't allow django channels to work correctly(I'm assuming it's an ip issue with the docker container). I'm not sure if you were already going to use python3 manage.py runserver to test the project but if you are that should allow the real time chat to work.
 
 References:
 I've adapted code for user authentication, username changes, uploading images, and follower relationships
